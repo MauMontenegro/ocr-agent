@@ -1,6 +1,15 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from agent.services.textract import textract_service
 from agent.services.ocr_agent import graph_builder
+
+import logging
+
+# Explicitly configure logging
+logging.basicConfig(
+    level=logging.DEBUG,  # Change to DEBUG to see everything
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Agente Tickets-OCR Petroil",version="1.0")
 
@@ -12,17 +21,17 @@ def init_page():
     """
     return {"message":"El servicio está Operativo"}
 
-@app.post("/process")
+@app.post("/agent")
 async def agent_call(file:UploadFile=File(...) ):
     """
-        Endpoint que maneja llamadas al agente de OCR
+        Llamada al agente de ocr y estructuración
     """
     if file.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(
             status_code=400, detail="Only JPEG and PNG files are allowed."
         )
-    file_bytes = await file.read()
-    response = textract_service(file_bytes)
-    returnal = graph_builder(response)
+    file_bytes = await file.read()       
+   
+    returnal = graph_builder(file_bytes)
 
     return {"response":returnal}

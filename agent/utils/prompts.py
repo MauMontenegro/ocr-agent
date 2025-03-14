@@ -7,4 +7,5 @@ tank_additional_prompt = """Return only the structured JSON, with no additional 
 oxxo_task_prompt= """Extract product details and prices from OXXO purchase tickets.  
     Structure the data in JSON format.If there are repeated product, add them."""
 
-oxxo_additional_prompt= """Return only the JSON, with no extra text."""
+oxxo_additional_prompt= """Return only the structured JSON, with no additional explanations."""
+

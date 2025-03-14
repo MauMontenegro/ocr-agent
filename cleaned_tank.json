@@ -1,0 +1,62 @@
+[
+    {
+        "Tanque": "TV-01 PEMEX DIESEL",
+        "VOLUMEN": 11546,
+        "TC COMBUSTI": 11541,
+        "100% VACIO": 0,
+        "ALTURA": 1124.46,
+        "AGUA": 0,
+        "VOLUMEN AGUA": 0,
+        "TEMPERATURA": 19.53
+    },
+    {
+        "Tanque": "TV-02 DIESEL MARINO",
+        "VOLUMEN": 58771,
+        "TC COMBUSTI": 58646,
+        "100% VACIO": 42195,
+        "ALTURA": 5716.76,
+        "AGUA": 0,
+        "VOLUMEN AGUA": 0,
+        "TEMPERATURA": 22.63
+    },
+    {
+        "Tanque": "TV-03 DIESEL INDUST",
+        "VOLUMEN": 69245,
+        "TC COMBUSTI": 69111,
+        "100% VACIO": 31340,
+        "ALTURA": 6746.59,
+        "AGUA": 0,
+        "VOLUMEN AGUA": 0,
+        "TEMPERATURA": 22.39
+    },
+    {
+        "Tanque": "TH-2 MAGNA",
+        "VOLUMEN": 49892,
+        "TC COMBUSTI": 49880,
+        "100% VACIO": 11303,
+        "ALTURA": 2480.94,
+        "AGUA": 0,
+        "VOLUMEN AGUA": 0,
+        "TEMPERATURA": 20.18
+    },
+    {
+        "Tanque": "TH-3 MAGNA",
+        "VOLUMEN": 39858,
+        "TC COMBUSTI": 39974,
+        "100% VACIO": 60539,
+        "ALTURA": 1358.41,
+        "AGUA": 0,
+        "VOLUMEN AGUA": 0,
+        "TEMPERATURA": 17.69
+    },
+    {
+        "Tanque": "TV 4 DIESEL AUTOM",
+        "VOLUMEN": 76086,
+        "TC COMBUSTI": 76216,
+        "100% VACIO": 28294,
+        "ALTURA": 7125.87,
+        "AGUA": 0,
+        "VOLUMEN AGUA": 0,
+        "TEMPERATURA": 17.9
+    }
+]

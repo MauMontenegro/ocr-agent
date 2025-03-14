@@ -9,6 +9,7 @@ from langchain_aws import ChatBedrockConverse
 from langchain_core.tools import tool
 from langgraph.prebuilt import ToolNode,tools_condition
 from langgraph.graph import START,END,StateGraph
+from langchain_core.messages import HumanMessage, SystemMessage
 
 # State
 from agent.utils.state import OCRAgentState
@@ -58,8 +59,7 @@ def oxxo_schematizer(ocr_text:str)-> str:
     return "Not Done"
 
 # Bind Tools to Agent
-tools = [tank_schematizer,oxxo_schematizer]
-llm_w_tools = llm.bind_tools(tools)
+llm_w_tools = llm.bind_tools([tank_schematizer,oxxo_schematizer])
 
 # Definition of nodes (operations on states)
 def schematizer(state:OCRAgentState):
@@ -71,18 +71,31 @@ def schematizer(state:OCRAgentState):
     return{"messages":[response]}
 
 # Graph Builder
-def graph_builder():
+def graph_builder(ocr_text):
     workflow = StateGraph(OCRAgentState)
 
     workflow.add_node("schema",schematizer)
-    tool_node = ToolNode(tools=tools)
+    tool_node = ToolNode(tools=[tank_schematizer,oxxo_schematizer])
     workflow.add_node("tools",tool_node)
 
     workflow.add_conditional_edges("schema",tools_condition)
 
     workflow.add_edge(START,"schema")
     workflow.add_edge("tools","schema")
-
+    
     ocr_agent = workflow.compile()
 
-    return ocr_agent
+    message = [
+        SystemMessage(content=(
+        "You are an agent responsible for analyzing texts extracted via OCR and processing them based on their content."    
+    )),
+        HumanMessage(content=f"This is the OCR text:{ocr_text}")]
+
+    initial_state={
+        "messages":message,  
+    }
+
+    print(initial_state)
+    ocr_agent.invoke(initial_state)
+
+    return "Task Done"

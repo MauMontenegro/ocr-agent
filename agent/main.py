@@ -1,8 +1,8 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from agent.services.textract import textract_service
-from langchain_core.messages import HumanMessage, SystemMessage
 from agent.services.ocr_agent import graph_builder
-app = FastAPI(title="Agente OCR Petroil",version="1.0")
+
+app = FastAPI(title="Agente Tickets-OCR Petroil",version="1.0")
 
 @app.get("/")
 def init_page():
@@ -13,7 +13,7 @@ def init_page():
     return {"message":"El servicio está Operativo"}
 
 @app.post("/process")
-def agent_call(file:UploadFile=File(...) ):
+async def agent_call(file:UploadFile=File(...) ):
     """
         Endpoint que maneja llamadas al agente de OCR
     """
@@ -21,19 +21,8 @@ def agent_call(file:UploadFile=File(...) ):
         raise HTTPException(
             status_code=400, detail="Only JPEG and PNG files are allowed."
         )
-    
-    response = textract_service(file.read())
-    ocr_agent = graph_builder()
+    file_bytes = await file.read()
+    response = textract_service(file_bytes)
+    returnal = graph_builder(response)
 
-    message = [
-        SystemMessage(content=(
-        "You are an agent responsible for analyzing texts extracted via OCR and processing them based on their content."    
-    )),
-        HumanMessage(content=f"This is the OCR text:{response}")]
-
-    initial_state={
-        "messages":message,  
-    }
-
-    ocr_agent.invoke(initial_state)
-    
+    return {"response":returnal}

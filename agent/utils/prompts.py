@@ -1,11 +1,37 @@
-tank_task_prompt = """You are an agent specialized in analyzing OCR-extracted text about the state of fuel tanks.  
-    Your task is to extract the tank data and structure it into a JSON file according to the following schema:"""
+tank_task_prompt = """
+Extract information from this fuel tanks document.
+Extract the following information for each tank:
+    - Tank name
+    - Volumen
+    - tc combustible
+    - 100% vacío
+    - altura
+    - volumen de agua
+    - temperatura   
 
-tank_additional_prompt = """Return only the structured JSON, with no additional explanations. If a field is missing in the OCR text, set its value to 0."""
+Return the information in a structured format. I f a field is missing add it with 0.
+"""
 
+oxxo_task_prompt = """
+Extract information from this OXXO receipt.
+Extract the following information:
+- Store information
+- Date and time of purchase
+- List of purchased items with name, quantity and price
+- Total amount
+- Payment information (method, amount, change)
 
-oxxo_task_prompt= """Extract product details and prices from OXXO purchase tickets.  
-    Structure the data in JSON format.If there are repeated product, add them."""
+Return the information in a structured format.
+"""
 
-oxxo_additional_prompt= """Return only the structured JSON, with no additional explanations."""
+# Document classifier prompt
+classifier_prompt = """You are a document classifier specializing in OCR text.
+Examine the following OCR text and determine which category it belongs to:
+
+1. "tank_schematizer" - Tank monitoring reports with volume, temperature, and fuel levels
+2. "oxxo_schematizer" - OXXO store receipts with product sales
+3. "unknown" - If the document doesn't clearly fit either category
+
+Return ONLY the category name without any explanation: "tank_schematizer", "oxxo_schematizer", or "unknown".
+"""
 

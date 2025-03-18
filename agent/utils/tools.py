@@ -2,32 +2,71 @@
     Modulo que contiene las herramientas utilizadas por el Agente de OCR
 """
 import os
+import json
+import traceback
 from langchain_core.tools import tool
 from dotenv import load_dotenv
 from langchain_aws import ChatBedrockConverse
-from agent.utils.utils import clean
+from agent.utils.prompts import classifier_prompt
+from agent.utils.schemas import TankResponse,OxxoReceipt
+from agent.utils.state import OCRAgentState
 
 load_dotenv()
 
-def general_schematizer(ocr_text:str,schema:dict,task_description:str,additional:str,doc_type:str)-> str:
+def general_schematizer(ocr_text:str,task_description:str,doc_type:str)-> str:        
+
     MODEL_ID = os.getenv("MODEL_ID_SCHEMA")
     llm_schema = ChatBedrockConverse(model_id = MODEL_ID)
 
+    # Select the appropriate schema based on doc_type
+    if doc_type == "tank":
+        output_schema = TankResponse
+    elif doc_type == "oxxo":
+        output_schema = OxxoReceipt
+    else:
+        raise ValueError(f"Unknown document type: {doc_type}")
+    
+    # Configure the model to use structured output
+    structured_llm = llm_schema.with_structured_output(output_schema)
+
     schematizer_prompt = f"""{task_description}
-
     OCR_TEXT:
-    {ocr_text}
+    {ocr_text}   
+    """    
+   
+    print(f"Esquematizando texto para {doc_type}...")
+    try:
+        # Get the response from the LLM using structured output
+        response = structured_llm.invoke(schematizer_prompt)       
 
-    Schema:
-    {schema}
+        # Save to JSON file (fix for Pydantic v2)
+        with open(f"cleaned_{doc_type}.json", "w", encoding="utf-8") as f:            
+            if hasattr(response, "model_dump_json"):
+                f.write(response.model_dump_json(indent=4))
 
-    {additional}
+        print(f"Schema saved successfully as cleaned_{doc_type}.json")        
+        
+        return "Done",response
+        
+    except Exception as e:        
+        traceback.print_exc()
+        print(f"Error in general_schematizer: {str(e)}")
+        
+        # If everything fails, save the raw response for debugging
+        with open(f"error_{doc_type}_response.txt", "w", encoding="utf-8") as f:
+            f.write(str(response) if 'response' in locals() else "No response")
+
+        return "Not Done"
+        
+
+def classify(ocr_text:str)-> str:
     """
+    Classify ocr texts based on their content
+    """
+    MODEL_ID = os.getenv("MODEL_ID_CLASSIFY")
+    llm_classify = ChatBedrockConverse(model_id = MODEL_ID)
 
-    print("Esquematizando texto...")
-    schema_response = llm_schema.invoke(schematizer_prompt)
+    classification_message = f"{classifier_prompt}\n\nOCR Text:\n{ocr_text}"
+    classification_response = llm_classify.invoke(classification_message)
 
-    print("Limpiando texto...")
-    clean(schema_response.content,filename="cleaned_"+doc_type+".json")
-
-    return "Done"
+    return classification_response

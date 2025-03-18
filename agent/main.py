@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from agent.services.ocr_agent import graph_builder
-
+from agent.utils.schemas import userQuery
 import logging
 
 # Explicitly configure logging
@@ -26,12 +26,22 @@ async def agent_call(file:UploadFile=File(...) ):
     """
         Llamada al agente de ocr y estructuración
     """
+    print(file)
     if file.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(
             status_code=400, detail="Only JPEG and PNG files are allowed."
         )
     file_bytes = await file.read()       
    
-    returnal = graph_builder(file_bytes)
+    response = graph_builder(file_bytes)
 
-    return {"response":returnal}
+    return {"raw_text":response["raw_text"],
+            "structured_text":response["struct_text"]}
+
+@app.post("/chat")
+async def converse(query:userQuery):
+    """
+        Llamada al agente conversacional OCR
+    """
+    
+    pass

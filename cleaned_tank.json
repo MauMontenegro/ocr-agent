@@ -1,62 +1,100 @@
-[
-    {
-        "Tanque": "TV-01 PEMEX DIESEL",
-        "VOLUMEN": 11546,
-        "TC COMBUSTI": 11541,
-        "100% VACIO": 0,
-        "ALTURA": 1124.46,
-        "AGUA": 0,
-        "VOLUMEN AGUA": 0,
-        "TEMPERATURA": 19.53
-    },
-    {
-        "Tanque": "TV-02 DIESEL MARINO",
-        "VOLUMEN": 58771,
-        "TC COMBUSTI": 58646,
-        "100% VACIO": 42195,
-        "ALTURA": 5716.76,
-        "AGUA": 0,
-        "VOLUMEN AGUA": 0,
-        "TEMPERATURA": 22.63
-    },
-    {
-        "Tanque": "TV-03 DIESEL INDUST",
-        "VOLUMEN": 69245,
-        "TC COMBUSTI": 69111,
-        "100% VACIO": 31340,
-        "ALTURA": 6746.59,
-        "AGUA": 0,
-        "VOLUMEN AGUA": 0,
-        "TEMPERATURA": 22.39
-    },
-    {
-        "Tanque": "TH-2 MAGNA",
-        "VOLUMEN": 49892,
-        "TC COMBUSTI": 49880,
-        "100% VACIO": 11303,
-        "ALTURA": 2480.94,
-        "AGUA": 0,
-        "VOLUMEN AGUA": 0,
-        "TEMPERATURA": 20.18
-    },
-    {
-        "Tanque": "TH-3 MAGNA",
-        "VOLUMEN": 39858,
-        "TC COMBUSTI": 39974,
-        "100% VACIO": 60539,
-        "ALTURA": 1358.41,
-        "AGUA": 0,
-        "VOLUMEN AGUA": 0,
-        "TEMPERATURA": 17.69
-    },
-    {
-        "Tanque": "TV 4 DIESEL AUTOM",
-        "VOLUMEN": 76086,
-        "TC COMBUSTI": 76216,
-        "100% VACIO": 28294,
-        "ALTURA": 7125.87,
-        "AGUA": 0,
-        "VOLUMEN AGUA": 0,
-        "TEMPERATURA": 17.9
-    }
-]
+{
+    "tank_names": [
+        "TV1 Diesel 1",
+        "TV 2 DIESEL 2",
+        "TV3 DIESEL 3",
+        "TV 4 DIESEL 4",
+        "TVS DIESEL 5",
+        "TV6 DIESEL 6",
+        "THB GASOLINA",
+        "Autoconsumo",
+        "TV- 1000 M3",
+        "TV 500M3",
+        "TV7",
+        "th 150 m3"
+    ],
+    "volumen": [
+        "75020",
+        "88434",
+        "66972",
+        "43701",
+        "85725",
+        "75092",
+        "94746",
+        "62145",
+        "92858",
+        "336818",
+        "51307",
+        "79073"
+    ],
+    "tc_combusti": [
+        "74899",
+        "88330",
+        "66915",
+        "43562",
+        "85532",
+        "74962",
+        "94337",
+        "62022",
+        "93016",
+        "335935",
+        "51289",
+        "78896"
+    ],
+    "vacio_100": [
+        "32103",
+        "17599",
+        "26323",
+        "61347",
+        "17347",
+        "26966",
+        "25215",
+        "22962",
+        "907142",
+        "101445",
+        "50052",
+        "71761"
+    ],
+    "altura": [
+        "5994.70",
+        "7070.04",
+        "6647.32",
+        "4343.14",
+        "8682.98",
+        "7681.49",
+        "2416.66",
+        "1913.55",
+        "969.43",
+        "4880.17",
+        "5284.66",
+        "1718.02"
+    ],
+    "volumen_agua": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "88"
+    ],
+    "temperatura": [
+        "21.34",
+        "21.46",
+        "21.06",
+        "23.93",
+        "22.79",
+        "22.13",
+        "23.59",
+        "22.46",
+        "17.90",
+        "22.19",
+        "20.43",
+        "21.86"
+    ]
+}

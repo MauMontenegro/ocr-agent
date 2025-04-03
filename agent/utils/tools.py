@@ -2,30 +2,19 @@
     Modulo que contiene las herramientas utilizadas por el Agente de OCR
 """
 import os
-import json
 import traceback
 from langchain_core.tools import tool
 from dotenv import load_dotenv
 from langchain_aws import ChatBedrockConverse
 from agent.utils.prompts import classifier_prompt
-from agent.utils.schemas import TankResponse,OxxoReceipt
-from agent.utils.state import OCRAgentState
 
 load_dotenv()
 
-def general_schematizer(ocr_text:str,task_description:str,doc_type:str)-> str:        
+def general_schematizer(ocr_text:str,task_description:str,doc_type:str,output_schema)-> str:        
 
     MODEL_ID = os.getenv("MODEL_ID_SCHEMA")
     llm_schema = ChatBedrockConverse(model_id = MODEL_ID)
-
-    # Select the appropriate schema based on doc_type
-    if doc_type == "tank":
-        output_schema = TankResponse
-    elif doc_type == "oxxo":
-        output_schema = OxxoReceipt
-    else:
-        raise ValueError(f"Unknown document type: {doc_type}")
-    
+        
     # Configure the model to use structured output
     structured_llm = llm_schema.with_structured_output(output_schema)
 
@@ -37,7 +26,7 @@ def general_schematizer(ocr_text:str,task_description:str,doc_type:str)-> str:
     print(f"Esquematizando texto para {doc_type}...")
     try:
         # Get the response from the LLM using structured output
-        response = structured_llm.invoke(schematizer_prompt)       
+        response = structured_llm.invoke(schematizer_prompt)               
 
         # Save to JSON file (fix for Pydantic v2)
         with open(f"cleaned_{doc_type}.json", "w", encoding="utf-8") as f:            

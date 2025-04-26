@@ -48,6 +48,13 @@ class EdenredReceipt(BaseModel):
     discount : str = Field(description="Descuento del producto")
     total : str = Field(description="total de compra")
 
+class DinamicaFacebook(BaseModel):
+    date: str = Field(description="Fecha de compra")
+    address: str = Field(description="Lugar de compra")
+    station: str = Field(description="Sucursal de compra")
+    total: str = Field(description="Pago total")
+    quantity: str = Field(description="Cantidad de litros comprados")
+
 class userQuery(BaseModel):
     user_query:str
     user_id: str

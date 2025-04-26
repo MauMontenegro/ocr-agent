@@ -12,7 +12,8 @@ dependencies = [
     "langchain-aws (>=0.2.15,<0.3.0)",
     "fastapi[standard] (>=0.115.11,<0.116.0)",
     "ipython (>=9.0.2,<10.0.0)",
-    "redis (>=5.2.1,<6.0.0)"    
+    "redis (>=5.2.1,<6.0.0)",
+    "pillow (>=11.2.1,<12.0.0)"    
 ]
 
 [build-system]

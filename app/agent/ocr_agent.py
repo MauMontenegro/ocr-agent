@@ -13,12 +13,13 @@ from langchain_core.messages import SystemMessage,AIMessage,ToolMessage
 
 from langgraph.types import Command
 # State
-from agent.utils.state import OCRAgentState
+from app.agent.utils.state import OCRAgentState
 # Tools
-from agent.utils.tools import general_schematizer,classify
-from agent.utils.prompts import(tank_task_prompt,purchase_ticket_task_prompt,edenred_task_prompt)
+from app.agent.utils.tools import general_schematizer,classify
+from app.agent.utils.prompts import(tank_task_prompt,purchase_ticket_task_prompt,
+                                    edenred_task_prompt,dinamica_facebook_prompt)
 
-from agent.services.textract import textract_service
+from app.agent.services.textract import textract_service
 
 
 import logging
@@ -36,7 +37,7 @@ MODEL_ID= os.getenv("MODEL_ID_SCHEMA")
 llm = ChatBedrockConverse(model_id=MODEL_ID)
 
 
-from agent.utils.schemas import TankResponse,EdenredReceipt,TicketReceipt
+from app.agent.utils.schemas import TankResponse,EdenredReceipt,TicketReceipt,DinamicaFacebook
 @tool
 def tank_schematizer(ocr_text: str) -> str:
     """Structure a text that defines the state of gasoline tanks.
@@ -47,7 +48,7 @@ def tank_schematizer(ocr_text: str) -> str:
         ocr_text=ocr_text,       
         task_description=tank_task_prompt,        
         output_schema=TankResponse,
-        doc_type="fuel_tank")    
+        doc_type="tank")    
     return Command(
         update={            
             "structured_text": schema,            
@@ -100,18 +101,39 @@ def oxxo_schematizer(ocr_text: str) -> str:
                 )
             ],
         }
-    )   
+    )
+
+@tool
+def facebook_schematizer(ocr_text: str) -> str:
+    """Structure a text which defines a gas receipt.      
+    """
+    print("Calling Facebook Tool.")
+    response,schema = general_schematizer(
+        ocr_text=ocr_text,       
+        task_description=dinamica_facebook_prompt,        
+        output_schema=DinamicaFacebook,
+        doc_type="dinamica_facebook")
+    return Command(
+        update={            
+            "structured_text": schema,            
+            "messages": [
+                ToolMessage(
+                    content=response, tool_call_id="1234",
+                )
+            ],
+        }
+    )     
     
 
-tools=[tank_schematizer,oxxo_schematizer,edenred_schematizer]
+tools=[tank_schematizer,oxxo_schematizer,edenred_schematizer,facebook_schematizer]
 
 # Bind Tools to Agent
 llm_w_tools = llm.bind_tools(tools)
 
+# Create a Tool Node
 tool_node = ToolNode(tools)
 
 # Definition of nodes (operations on states)
-
 def build_schematizer_tool(state:OCRAgentState):
     print("Building Schematizer Tool...")
 
@@ -138,7 +160,7 @@ def schematizer(state:OCRAgentState):
         return state
     
     response = tool_node.invoke({"messages": state["messages"]})     
-    
+    print(response)
     if isinstance(response[0],Command):        
         updates = response[0].update           
         return {"messages":updates["messages"][-1],"structured_text":updates["structured_text"]}    
@@ -146,8 +168,10 @@ def schematizer(state:OCRAgentState):
 
 def classifier(state:OCRAgentState):
     print("Cassifying Document")
-    sample_length = min(len("\n".join(state["extracted_text"])), 1000) 
+    sample_length = min(len("\n".join(state["extracted_text"])), 1000)
+    print(state["extracted_text"]) 
     doc_type = classify(state["extracted_text"][:sample_length])
+    print(doc_type)
     tool_t_call = doc_type.content.strip().lower()    
     return{"messages":state["messages"],"tool_t_call":tool_t_call}
 
@@ -168,8 +192,7 @@ def graph_builder(image_bytes):
     workflow.add_node("ocr",ocr_step)
     workflow.add_node("classify",classifier)
     workflow.add_node("build_schematizer",build_schematizer_tool)
-
-    tool_node = ToolNode(tools=tools)
+    
     workflow.add_node("tools",tool_node)
     workflow.add_conditional_edges("schema",tools_condition)
 

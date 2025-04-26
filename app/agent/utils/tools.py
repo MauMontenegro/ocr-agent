@@ -3,10 +3,9 @@
 """
 import os
 import traceback
-from langchain_core.tools import tool
 from dotenv import load_dotenv
 from langchain_aws import ChatBedrockConverse
-from agent.utils.prompts import classifier_prompt
+from app.agent.utils.prompts import classifier_prompt
 
 load_dotenv()
 

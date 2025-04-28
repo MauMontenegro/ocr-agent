@@ -1,0 +1,9 @@
+name: ocr-agent-env
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11.*
+  - pip
+  - poetry
+  - poetry-plugin-export

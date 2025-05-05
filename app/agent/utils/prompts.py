@@ -40,17 +40,18 @@ Extract the following details:
 Ensure accuracy in extracted values. If any field is missing, return an empty string ("").  
 """
 
-dinamica_facebook_prompt ="""You are an information extraction agent specialized in gas station receipts.
-Extract the following structured information from the OCR-processed text:
+dinamica_facebook_prompt ="""Eres un agente especializado en extracción de información de tickets de gasolina escaneados mediante OCR.
 
-Extract the following fields:
-- **Station**: Name or branch of the gas station
-- **Address**: Complete address of the station
-- **Date**: Transaction date in YYYY-MM-DD format
-- **Volume**: Amount of fuel in liters/gallons
-- **Total_Amount**: Total amount charged for the transaction
+A partir del siguiente texto extraído por OCR, identifica y devuelve exclusivamente los siguientes campos en formato estructurado y con el tipo de dato indicado:
 
-Only return these fields. If any information is not found, return an empty string for that field.
+- **Estación**: Nombre o sucursal de la gasolinera (string).  
+- **Dirección**: Dirección completa de la estación (string).  
+- **Fecha**: Fecha de la transacción, en formato AAAA-MM-DD (date).  
+- **Volumen**: Cantidad de combustible cargado (en litros o galones, según se indique) (flotante).  
+- **Cantidad o Importe**: Total o importe cobrado por la gasolina (flotante).
+
+Devuelve únicamente estos campos como resultado.  
+Si alguno de los datos no puede encontrarse en el texto, devuelve una cadena vacía (`""`) en ese campo.
 """
 
 # Document classifier prompt
@@ -60,7 +61,7 @@ Examine the following OCR text and determine which category it belongs to:
 1. "tank_schematizer" - Tank monitoring reports with volume, temperature, and fuel levels
 2. "oxxo_schematizer" - OXXO store receipts with product sales
 3. "edenred_schematizer" - Transport Unit Purchase 
-4. "facebook_schematizer" - Gas station receipts showing fuel purchases with volume, price per unit, and total amount
+4. "facebook_schematizer" - Gas station receipts of 'Dispensarios' machines of redpetroil enterprise and petroplazas showing fuel purchases with volume, address, gas station and total amount
 5. "unknown" - If the document doesn't clearly fit either category
 
 Return ONLY the category name without any explanation.

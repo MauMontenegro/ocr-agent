@@ -43,7 +43,17 @@ async def agent_call_url(data:dict):
     img_byte_arr = io.BytesIO()
     image.save(img_byte_arr, format='JPEG')
     file_bytes = img_byte_arr.getvalue()          
-   
-    response = graph_builder(file_bytes)   
-
-    return {"structured_text":response["struct_text"]}
+    try:
+        response = graph_builder(file_bytes)
+        return {"structured_text":response["struct_text"]}
+    except Exception as e:
+        custom_json = {
+            "date": "None",
+            "address": "None",
+            "station": "None",
+            "total": 0,
+            "quantity": 0
+             }
+        print(f"Error in general_schematizer: {str(e)}")
+        return{"structured:text":custom_json}
+    
